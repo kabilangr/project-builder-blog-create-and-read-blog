@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
@@ -25,16 +27,29 @@ public class SignUpController extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		System.out.println("Sign up Controller");
-//		Connection con=null;
-//		con=ConnectionManager.getConnection();
-//		if(con!=null) {
-//			System.out.println("Database connection established");
-//		}
-//		else
-//		{
-//			System.out.println("Check your connection");
-//		}
+		System.out.println("Sign up Controller");
+		ConnectionManager on=null;
+		on=new ConnectionManager();
+		Connection con=null;
+		try {
+			con = on.getConnection();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(con!=null) {
+			System.out.println("Database connection established");
+		}
+		else
+		{
+		System.out.println("Check your connection");
+		}
 		RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/signupView.jsp");
 		rd.forward(request,response);
 	}
@@ -54,7 +69,16 @@ public class SignUpController extends HttpServlet {
 		user.setPassword(password);
 		UserDAO userdao=new UserDAO();
 		user.setDate(date);
-		int checkUser = userdao.signUp(user);
+		int checkUser = 0;
+		try {
+			checkUser = userdao.signUp(user);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(checkUser!=0)
 		{
